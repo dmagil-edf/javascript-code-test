@@ -2,11 +2,16 @@
 
 `BookSearchApiClient` is a simple class that makes a call to a http API to retrieve a list of books and return them.
 
-You need to refactor the `BookSearchApiClient` class, and demonstrate in `example-client.js` how it would be used. Refactor to what you consider to be production ready code. You can change it in anyway you would like and can use javascript or typescript.
+This repository is now bootstrapped as a TypeScript project.
 
-Things you will be asked about:
+## Commands
 
-1. How could you easily add other book seller APIs in the the future
-2. How would you manage differences in response payloads between different APIs without needing to make future changes to whatever code you have in example-client.js
-3. How would you implement different query types for example: by publisher, by year published etc
-4. How your code would be tested
+- `yarn start` runs the example TypeScript client directly with `tsx`
+- `yarn check` typechecks the project without emitting output
+- `yarn build` compiles TypeScript into `dist/`
+
+## Structure
+
+- `src/BookSearchApiClient.ts` contains the typed client API and search query model
+- `src/ExampleBookSellerDataSource.ts` contains a concrete API-backed data source
+- `src/example-client.ts` shows how to compose and run the client
