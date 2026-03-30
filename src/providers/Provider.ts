@@ -1,5 +1,6 @@
 import { Book } from "../domain/Book";
+import { BookSearchQuery } from "../domain/BookSearchQuery";
 
 export interface Provider {
-  getBooksByAuthor: (author: string, limit: number) => Promise<Book[]>;
+  search: (query: BookSearchQuery) => Promise<Book[]>;
 }
