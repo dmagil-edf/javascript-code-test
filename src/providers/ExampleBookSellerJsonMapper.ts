@@ -1,16 +1,21 @@
+import { z } from "zod";
 import { Book } from "../domain/Book";
 
-export type RawExampleBookSellerBook = {
-  book: {
-    title: string;
-    author: string;
-    isbn: string;
-  };
-  stock: {
-    quantity: number;
-    price: number;
-  };
-};
+export const RawExampleBookSellerBookSchema = z.object({
+  book: z.object({
+    title: z.string(),
+    author: z.string(),
+    isbn: z.string(),
+  }),
+  stock: z.object({
+    quantity: z.number(),
+    price: z.number(),
+  }),
+});
+
+export const RawExampleBookSellerBooksSchema = z.array(RawExampleBookSellerBookSchema);
+
+export type RawExampleBookSellerBook = z.infer<typeof RawExampleBookSellerBookSchema>;
 
 export function mapBook(raw: RawExampleBookSellerBook): Book {
   return {

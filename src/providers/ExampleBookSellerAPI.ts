@@ -4,7 +4,10 @@ import { mapBooks } from "./ExampleBookSellerJsonMapper";
 import { Provider } from "./Provider";
 
 export class ExampleBookSellerAPI implements Provider {
-  constructor(private readonly baseUrl: string = "http://api.book-seller-example.com") {}
+  constructor(
+    private readonly baseUrl: string = process.env.EXAMPLE_BOOK_SELLER_BASE_URL ??
+      "http://api.book-seller-example.com",
+  ) {}
 
   async search(query: BookSearchQuery): Promise<Book[]> {
     const url = this.buildUrl(query);

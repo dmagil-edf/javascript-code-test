@@ -77,5 +77,14 @@ describe("ExampleBookSellerAPI", () => {
         "Network error",
       );
     });
+
+    test("throws when response shape is invalid", async () => {
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: async () => [{ unexpected: "shape" }],
+      });
+
+      await expect(provider.search({ author: "Shakespeare", limit: 10 })).rejects.toThrow();
+    });
   });
 });
