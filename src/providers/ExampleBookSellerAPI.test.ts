@@ -87,4 +87,34 @@ describe("ExampleBookSellerAPI", () => {
       await expect(provider.search({ author: "Shakespeare", limit: 10 })).rejects.toThrow();
     });
   });
+
+  describe("XML format", () => {
+    const xmlProvider = new ExampleBookSellerAPI("http://test-api.example.com", "xml");
+    const validXml = `
+      <books>
+        <item>
+          <book><title>Hamlet</title><author>William Shakespeare</author><isbn>9780141396507</isbn></book>
+          <stock><quantity>4</quantity><price>9.99</price></stock>
+        </item>
+      </books>`;
+
+    test("requests xml format and returns mapped books", async () => {
+      mockFetch.mockResolvedValue({ ok: true, text: async () => validXml });
+
+      const result = await xmlProvider.search({ author: "Shakespeare", limit: 5 });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        "http://test-api.example.com/search?author=Shakespeare&limit=5&format=xml",
+      );
+      expect(result).toContainEqual(
+        expect.objectContaining({ title: "Hamlet", author: "William Shakespeare" }),
+      );
+    });
+
+    test("throws on invalid XML response shape", async () => {
+      mockFetch.mockResolvedValue({ ok: true, text: async () => "<unexpected/>" });
+
+      await expect(xmlProvider.search({ author: "Shakespeare", limit: 5 })).rejects.toThrow();
+    });
+  });
 });
