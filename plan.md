@@ -22,8 +22,8 @@ Requirements:
 
 Implementation plan:
 
-1. Define domain types
-2. Define interface for BookSearchApiClient and Provider
+1. ✅ Define domain types
+2. ✅ Define interface for BookSearchApiClient and Provider
 3. Build query param validation logic in BookSearchApiClient and test
 4. Build Mapper for 1st provider and test
 5. Build Provider including response handling and test
