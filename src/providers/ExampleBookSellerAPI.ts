@@ -1,8 +1,8 @@
-import { Book } from "../domain/Book";
-import { Provider } from "./Provider";
+// import { Book } from "../domain/Book";
+// import { Provider } from "./Provider";
 
-export class ExampleBookSellerAPI implements Provider {
-  getBooksByAuthor(authour, limit) {
-    return;
-  }
-}
+// export class ExampleBookSellerAPI implements Provider {
+//   getBooksByAuthor(authour, limit) {
+//     return;
+//   }
+// }
