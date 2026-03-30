@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { ExampleBookSellerAPI } from "./ExampleBookSellerAPI";
-import { RawExampleBookSellerBook } from "./ExampleBookSellerJsonMapper";
+import { ExampleBookSellerAPI } from "./API";
+import { RawExampleBookSellerBook } from "./JsonMapper";
 
 const rawBooks: RawExampleBookSellerBook[] = [
   {

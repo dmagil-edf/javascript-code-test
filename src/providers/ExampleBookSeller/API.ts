@@ -1,8 +1,8 @@
-import { Book } from "../domain/Book";
-import { BookSearchQuery } from "../domain/BookSearchQuery";
-import { mapBooks, RawExampleBookSellerBooksSchema } from "./ExampleBookSellerJsonMapper";
-import { mapBooksFromXml } from "./ExampleBookSellerXmlMapper";
-import { Provider } from "./Provider";
+import { Book } from "../../domain/Book";
+import { BookSearchQuery } from "../../domain/BookSearchQuery";
+import { mapBooks, RawExampleBookSellerBooksSchema } from "./JsonMapper";
+import { mapBooksFromXml } from "./XmlMapper";
+import { Provider } from "../Provider";
 
 type Format = "json" | "xml";
 

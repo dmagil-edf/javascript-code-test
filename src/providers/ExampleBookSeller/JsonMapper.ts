@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Book } from "../domain/Book";
+import { Book } from "../../domain/Book";
 
 export const RawExampleBookSellerBookSchema = z.object({
   book: z.object({

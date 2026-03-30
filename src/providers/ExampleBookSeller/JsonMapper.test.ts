@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { mapBook, mapBooks, RawExampleBookSellerBook } from "./ExampleBookSellerJsonMapper";
+import { mapBook, mapBooks, RawExampleBookSellerBook } from "./JsonMapper";
 
 const rawBook1: RawExampleBookSellerBook = {
   book: {

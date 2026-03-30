@@ -1,7 +1,7 @@
 import { XMLParser } from "fast-xml-parser";
 import { z } from "zod";
-import { mapBook } from "./ExampleBookSellerJsonMapper";
-import { Book } from "../domain/Book";
+import { mapBook } from "./JsonMapper";
+import { Book } from "../../domain/Book";
 
 // fast-xml-parser returns all tag values as strings when parseTagValue is false,
 // so numeric fields need coercion.

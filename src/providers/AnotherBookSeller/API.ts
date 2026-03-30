@@ -1,6 +1,6 @@
-import { Book } from "../domain/Book";
-import { BookSearchQuery } from "../domain/BookSearchQuery";
-import { Provider } from "./Provider";
+import { Book } from "../../domain/Book";
+import { BookSearchQuery } from "../../domain/BookSearchQuery";
+import { Provider } from "../Provider";
 
 // AnotherBookSellerAPI demonstrates how a second provider can be plugged in
 // without any changes to BookSearchApiClient or example-client.ts.

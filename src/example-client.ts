@@ -1,4 +1,4 @@
-import { ExampleBookSellerAPI } from "./providers/ExampleBookSellerAPI";
+import { ExampleBookSellerAPI } from "./providers/ExampleBookSeller/API";
 import { BookSearchApiClient } from "./service/BookSearchApiClient";
 
 const provider = new ExampleBookSellerAPI();

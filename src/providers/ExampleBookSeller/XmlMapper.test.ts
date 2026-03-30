@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { mapBooksFromXml } from "./ExampleBookSellerXmlMapper";
+import { mapBooksFromXml } from "./XmlMapper";
 
 const validXml = `
 <books>
