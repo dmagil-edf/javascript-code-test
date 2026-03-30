@@ -1,6 +1,6 @@
 import { Book } from "../domain/Book";
 import { BookSearchQuery } from "../domain/BookSearchQuery";
-import { mapBooks } from "./ExampleBookSellerJsonMapper";
+import { mapBooks, RawExampleBookSellerBooksSchema } from "./ExampleBookSellerJsonMapper";
 import { Provider } from "./Provider";
 
 export class ExampleBookSellerAPI implements Provider {
@@ -18,7 +18,8 @@ export class ExampleBookSellerAPI implements Provider {
     }
 
     const json = await response.json();
-    return mapBooks(json);
+    const parsed = RawExampleBookSellerBooksSchema.parse(json);
+    return mapBooks(parsed);
   }
 
   private buildUrl(query: BookSearchQuery): string {
