@@ -1,6 +1,18 @@
-// import { BookSearchApiClient } from "./service/BookSearchApiClient";
+import { ExampleBookSellerAPI } from "./providers/ExampleBookSellerAPI";
+import { BookSearchApiClient } from "./service/BookSearchApiClient";
 
-// const client = new BookSearchApiClient("json");
-// const booksByShakespeare = client.getBooksByAuthor("Shakespeare", 10);
+const provider = new ExampleBookSellerAPI();
+const client = new BookSearchApiClient(provider);
 
-// console.log(booksByShakespeare);
+async function main() {
+  const byAuthor = await client.search({ author: "Shakespeare", limit: 5 });
+  console.log("By author:", byAuthor);
+
+  const byPublisher = await client.search({ publisher: "Penguin", limit: 10 });
+  console.log("By publisher:", byPublisher);
+
+  const byYear = await client.search({ yearPublished: 1603, limit: 3 });
+  console.log("By year:", byYear);
+}
+
+main().catch(console.error);
