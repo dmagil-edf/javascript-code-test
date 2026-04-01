@@ -79,18 +79,3 @@ export type BookSearchQuery = {
 Adding a new query type (e.g. `genre`) means adding one optional field here. `BookSearchApiClient` validates that at least one field is present but doesn't need to know which fields exist. Each provider's `buildUrl` method maps whichever fields are set to the appropriate URL parameters.
 
 This is preferable to separate methods per query type (e.g. `searchByAuthor`, `searchByPublisher`) because the `IBookSearchApiClient` interface never needs to change — a new field on the type is sufficient.
-
-### How would your code be tested?
-
-Tests use [Vitest](https://vitest.dev/). Run with `yarn test`. No real network requests are made in any test.
-
-- **`service/BookSearchApiClient.test.ts`** — unit tests for query validation (missing fields, invalid limit) and delegation to a mock provider passed via constructor injection
-- **`providers/ExampleBookSeller/API.test.ts`** — unit tests for URL building, JSON and XML response paths, HTTP errors, network errors, and invalid response shapes; `fetch` is mocked via `vi.stubGlobal`
-- **`providers/ExampleBookSeller/JsonMapper.test.ts`** — unit tests for valid data mapping and invalid shape rejection
-- **`providers/ExampleBookSeller/XmlMapper.test.ts`** — unit tests for valid XML mapping and invalid XML rejection
-
-`BookSearchApiClient` receives its `Provider` via constructor injection, so tests can pass a plain mock object without needing to mock imports or patch globals. The provider tests mock `fetch` directly via `vi.stubGlobal` — no DI container or HTTP client abstraction is required.
-
-## Node Version
-
-Requires Node ≥ 20 (specified in `.nvmrc` and `package.json` `engines` field). Node 20 is needed for the built-in `fetch` API.
