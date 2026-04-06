@@ -1,7 +1,7 @@
 import { Book } from "../../domain/Book";
 import { Provider } from "../Provider";
 
-// Demonstrates how another provider could be used with the client 
+// Demonstrates how another provider could be used with the client
 export class AnotherBookSellerAPI implements Provider {
   constructor(
     private readonly baseUrl: string = process.env.ANOTHER_BOOK_SELLER_BASE_URL ??
@@ -9,6 +9,14 @@ export class AnotherBookSellerAPI implements Provider {
   ) {}
 
   async searchByAuthor(_author: string, _limit: number): Promise<Book[]> {
+    throw new Error("Just for demoing. Could be extended");
+  }
+
+  async searchByPublisher(_publisher: string, _limit: number): Promise<Book[]> {
+    throw new Error("Just for demoing. Could be extended");
+  }
+
+  async searchByYear(_year: number, _limit: number): Promise<Book[]> {
     throw new Error("Just for demoing. Could be extended");
   }
 }

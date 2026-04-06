@@ -63,6 +63,30 @@ describe("ExampleBookSellerAPI", () => {
     });
   });
 
+  describe("searchByPublisher", () => {
+    test("fetches from /by-publisher with correct URL", async () => {
+      mockFetch.mockResolvedValue({ ok: true, json: async () => rawBooks });
+
+      await provider.searchByPublisher("Penguin", 5);
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        "http://test-api.example.com/by-publisher?q=Penguin&limit=5&format=json",
+      );
+    });
+  });
+
+  describe("searchByYear", () => {
+    test("fetches from /by-year with correct URL", async () => {
+      mockFetch.mockResolvedValue({ ok: true, json: async () => rawBooks });
+
+      await provider.searchByYear(1603, 5);
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        "http://test-api.example.com/by-year?q=1603&limit=5&format=json",
+      );
+    });
+  });
+
   describe("XML format", () => {
     const xmlProvider = new ExampleBookSellerAPI("http://test-api.example.com", "xml");
     const validXml = `

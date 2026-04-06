@@ -5,6 +5,12 @@ import { Provider } from "../Provider";
 
 type Format = "json" | "xml";
 
+const ENDPOINTS = {
+  byAuthor: "by-author",
+  byPublisher: "by-publisher",
+  byYear: "by-year",
+} as const;
+
 export class ExampleBookSellerAPI implements Provider {
   constructor(
     private readonly baseUrl: string = process.env.EXAMPLE_BOOK_SELLER_BASE_URL ??
@@ -12,9 +18,21 @@ export class ExampleBookSellerAPI implements Provider {
     private readonly format: Format = "json",
   ) {}
 
-  async searchByAuthor(author: string, limit: number): Promise<Book[]> {
-    const params = new URLSearchParams({ q: author, limit: String(limit), format: this.format });
-    const url = `${this.baseUrl}/by-author?${params}`;
+  searchByAuthor(author: string, limit: number): Promise<Book[]> {
+    return this.fetchBooks(ENDPOINTS.byAuthor, author, limit);
+  }
+
+  searchByPublisher(publisher: string, limit: number): Promise<Book[]> {
+    return this.fetchBooks(ENDPOINTS.byPublisher, publisher, limit);
+  }
+
+  searchByYear(year: number, limit: number): Promise<Book[]> {
+    return this.fetchBooks(ENDPOINTS.byYear, String(year), limit);
+  }
+
+  private async fetchBooks(endpoint: string, query: string, limit: number): Promise<Book[]> {
+    const params = new URLSearchParams({ q: query, limit: String(limit), format: this.format });
+    const url = `${this.baseUrl}/${endpoint}?${params}`;
     const response = await fetch(url);
 
     if (!response.ok) {

@@ -1,18 +1,39 @@
 import { z } from "zod";
 import { Book } from "../domain/Book";
-import { IBookSearchApiClient } from "../domain/BookSearchApiClient";
 import { Provider } from "../providers/Provider";
 
-const SearchByAuthorSchema = z.object({
-  author: z.string().trim().min(1, "author must not be empty"),
-  limit: z.number().int("limit must be an integer").positive("limit must be a positive integer"),
-});
+const LimitSchema = z
+  .number()
+  .int("limit must be an integer")
+  .positive("limit must be a positive integer");
 
-export class BookSearchApiClient implements IBookSearchApiClient {
+function nonEmptyString(fieldName: string) {
+  return z.string().trim().min(1, `${fieldName} must not be empty`);
+}
+
+const YearSchema = z
+  .number()
+  .int("year must be an integer")
+  .positive("year must be a positive number");
+
+export class BookSearchApiClient {
   constructor(private provider: Provider) {}
 
   searchByAuthor(author: string, limit: number): Promise<Book[]> {
-    SearchByAuthorSchema.parse({ author, limit });
+    nonEmptyString("author").parse(author);
+    LimitSchema.parse(limit);
     return this.provider.searchByAuthor(author, limit);
+  }
+
+  searchByPublisher(publisher: string, limit: number): Promise<Book[]> {
+    nonEmptyString("publisher").parse(publisher);
+    LimitSchema.parse(limit);
+    return this.provider.searchByPublisher(publisher, limit);
+  }
+
+  searchByYear(year: number, limit: number): Promise<Book[]> {
+    YearSchema.parse(year);
+    LimitSchema.parse(limit);
+    return this.provider.searchByYear(year, limit);
   }
 }

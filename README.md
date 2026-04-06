@@ -14,10 +14,9 @@ A TypeScript client for querying book seller APIs, refactored to demonstrate the
 src/
 ├── domain/
 │   ├── Book.ts                                    # Shared Book type returned by all providers
-│   ├── BookSearchQuery.ts                         # Query type (author, publisher, yearPublished, isbn, limit)
 │   └── BookSearchApiClient.ts                     # IBookSearchApiClient interface
 ├── service/
-│   └── BookSearchApiClient.ts                     # Validates queries, delegates to injected Provider
+│   └── BookSearchApiClient.ts                     # Validates input with Zod, delegates to injected Provider
 ├── providers/
 │   ├── Provider.ts                                # Interface all providers must implement
 │   ├── ExampleBookSeller/
@@ -50,7 +49,7 @@ Create a new folder under `src/providers/` (e.g. `AnotherBookSeller/`) and imple
 
 ```ts
 export interface Provider {
-  search(query: BookSearchQuery): Promise<Book[]>;
+  searchByAuthor: (author: string, limit: number) => Promise<Book[]>;
 }
 ```
 
@@ -64,18 +63,22 @@ Each provider folder owns its own mapper(s) (e.g. `JsonMapper.ts`, `XmlMapper.ts
 
 ### How would you implement different query types — by publisher, by year published, etc.?
 
-`BookSearchQuery` is a single object with optional fields:
+Each query type is an explicit method on the `Provider` interface (e.g. `searchByAuthor`, `searchByPublisher`). This design maps directly to how the underlying APIs work — each has a dedicated endpoint (`/by-author`, `/by-publisher`, etc.) rather than a single combined search endpoint.
 
-```ts
-export type BookSearchQuery = {
-  author?: string;
-  publisher?: string;
-  yearPublished?: number;
-  isbn?: string;
-  limit: number;
-};
-```
+Explicit methods were chosen because:
 
-Adding a new query type (e.g. `genre`) means adding one optional field here. `BookSearchApiClient` validates that at least one field is present but doesn't need to know which fields exist. Each provider's `buildUrl` method maps whichever fields are set to the appropriate URL parameters.
+- **No ambiguity** — the caller states exactly which search type they want
+- **Honest API modelling** — the provider interface reflects the real API surface
+- **Type safety** — each method has strongly typed parameters (e.g. `year: number` vs `author: string`), so invalid combinations are caught at compile time
 
-This is preferable to separate methods per query type (e.g. `searchByAuthor`, `searchByPublisher`) because the `IBookSearchApiClient` interface never needs to change — a new field on the type is sufficient.
+Adding a new query type means adding a method to the `Provider` interface and implementing it in each provider. The compiler ensures every provider is updated.
+
+### How your code would be tested
+
+Input validation and API response handling are tested independently:
+
+- **Service layer tests** — use a mocked provider to verify input validation (empty author, invalid limit) and correct delegation without making network calls
+- **Provider tests** — stub `fetch` globally to test URL construction, HTTP error handling, network failures, and response shape validation
+- **Mapper tests** — unit test the JSON and XML mappers directly to verify correct transformation from raw API shapes to the shared `Book` type
+
+[Zod](https://zod.dev) is used for validation at both boundaries — inputs are validated in the service layer before reaching the provider, and API responses are validated in the mappers before being returned to the caller. This ensures bad data is caught early with clear errors at every entry and exit point.
