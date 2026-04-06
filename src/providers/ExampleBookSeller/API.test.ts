@@ -19,17 +19,14 @@ afterEach(() => {
 describe("ExampleBookSellerAPI", () => {
   const provider = new ExampleBookSellerAPI("http://test-api.example.com");
 
-  describe("search", () => {
-    test("fetches by author and returns mapped books", async () => {
-      mockFetch.mockResolvedValue({
-        ok: true,
-        json: async () => rawBooks,
-      });
+  describe("searchByAuthor", () => {
+    test("fetches from /by-author and returns mapped books", async () => {
+      mockFetch.mockResolvedValue({ ok: true, json: async () => rawBooks });
 
-      const result = await provider.search({ author: "William Shakespeare", limit: 10 });
+      const result = await provider.searchByAuthor("William Shakespeare", 10);
 
       expect(mockFetch).toHaveBeenCalledWith(
-        "http://test-api.example.com/search?author=William+Shakespeare&limit=10&format=json",
+        "http://test-api.example.com/by-author?q=William+Shakespeare&limit=10&format=json",
       );
       expect(result).toEqual([
         {
@@ -42,30 +39,10 @@ describe("ExampleBookSellerAPI", () => {
       ]);
     });
 
-    test("fetches by publisher and builds correct URL", async () => {
-      mockFetch.mockResolvedValue({ ok: true, json: async () => [] });
-
-      await provider.search({ publisher: "Penguin", limit: 5 });
-
-      expect(mockFetch).toHaveBeenCalledWith(
-        "http://test-api.example.com/search?publisher=Penguin&limit=5&format=json",
-      );
-    });
-
-    test("fetches by yearPublished and builds correct URL", async () => {
-      mockFetch.mockResolvedValue({ ok: true, json: async () => [] });
-
-      await provider.search({ yearPublished: 1603, limit: 5 });
-
-      expect(mockFetch).toHaveBeenCalledWith(
-        "http://test-api.example.com/search?year=1603&limit=5&format=json",
-      );
-    });
-
     test("throws on non-2xx HTTP response", async () => {
       mockFetch.mockResolvedValue({ ok: false, status: 404 });
 
-      await expect(provider.search({ author: "Shakespeare", limit: 10 })).rejects.toThrow(
+      await expect(provider.searchByAuthor("Shakespeare", 10)).rejects.toThrow(
         "ExampleBookSellerAPI request failed with status 404",
       );
     });
@@ -73,9 +50,7 @@ describe("ExampleBookSellerAPI", () => {
     test("propagates network errors", async () => {
       mockFetch.mockRejectedValue(new Error("Network error"));
 
-      await expect(provider.search({ author: "Shakespeare", limit: 10 })).rejects.toThrow(
-        "Network error",
-      );
+      await expect(provider.searchByAuthor("Shakespeare", 10)).rejects.toThrow("Network error");
     });
 
     test("throws when response shape is invalid", async () => {
@@ -84,7 +59,7 @@ describe("ExampleBookSellerAPI", () => {
         json: async () => [{ unexpected: "shape" }],
       });
 
-      await expect(provider.search({ author: "Shakespeare", limit: 10 })).rejects.toThrow();
+      await expect(provider.searchByAuthor("Shakespeare", 10)).rejects.toThrow();
     });
   });
 
@@ -101,10 +76,10 @@ describe("ExampleBookSellerAPI", () => {
     test("requests xml format and returns mapped books", async () => {
       mockFetch.mockResolvedValue({ ok: true, text: async () => validXml });
 
-      const result = await xmlProvider.search({ author: "Shakespeare", limit: 5 });
+      const result = await xmlProvider.searchByAuthor("Shakespeare", 5);
 
       expect(mockFetch).toHaveBeenCalledWith(
-        "http://test-api.example.com/search?author=Shakespeare&limit=5&format=xml",
+        "http://test-api.example.com/by-author?q=Shakespeare&limit=5&format=xml",
       );
       expect(result).toContainEqual(
         expect.objectContaining({ title: "Hamlet", author: "William Shakespeare" }),
@@ -114,7 +89,7 @@ describe("ExampleBookSellerAPI", () => {
     test("throws on invalid XML response shape", async () => {
       mockFetch.mockResolvedValue({ ok: true, text: async () => "<unexpected/>" });
 
-      await expect(xmlProvider.search({ author: "Shakespeare", limit: 5 })).rejects.toThrow();
+      await expect(xmlProvider.searchByAuthor("Shakespeare", 5)).rejects.toThrow();
     });
   });
 });

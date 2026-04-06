@@ -1,6 +1,5 @@
 import { Book } from "./Book";
-import { BookSearchQuery } from "./BookSearchQuery";
 
 export interface IBookSearchApiClient {
-  search: (query: BookSearchQuery) => Promise<Book[]>;
+  searchByAuthor: (author: string, limit: number) => Promise<Book[]>;
 }

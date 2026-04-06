@@ -1,25 +1,18 @@
+import { z } from "zod";
 import { Book } from "../domain/Book";
 import { IBookSearchApiClient } from "../domain/BookSearchApiClient";
-import { BookSearchQuery } from "../domain/BookSearchQuery";
 import { Provider } from "../providers/Provider";
+
+const SearchByAuthorSchema = z.object({
+  author: z.string().trim().min(1, "author must not be empty"),
+  limit: z.number().int("limit must be an integer").positive("limit must be a positive integer"),
+});
 
 export class BookSearchApiClient implements IBookSearchApiClient {
   constructor(private provider: Provider) {}
 
-  search(query: BookSearchQuery): Promise<Book[]> {
-    this.validateQuery(query);
-    return this.provider.search(query);
-  }
-
-  private validateQuery(query: BookSearchQuery): void {
-    const { author, publisher, yearPublished, isbn, limit } = query;
-
-    if (!author && !publisher && !yearPublished && !isbn) {
-      throw new Error("At least one search field must be provided (author, publisher, yearPublished, or isbn)");
-    }
-
-    if (!Number.isInteger(limit) || limit <= 0) {
-      throw new Error("limit must be a positive integer");
-    }
+  searchByAuthor(author: string, limit: number): Promise<Book[]> {
+    SearchByAuthorSchema.parse({ author, limit });
+    return this.provider.searchByAuthor(author, limit);
   }
 }

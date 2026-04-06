@@ -14,55 +14,41 @@ describe("BookSearchApiClient", () => {
   ];
 
   const provider = {
-    search: vi.fn().mockResolvedValue(books),
+    searchByAuthor: vi.fn().mockResolvedValue(books),
   };
 
   const client = new BookSearchApiClient(provider);
 
-  test("delegates to provider with a valid author query", async () => {
-    const query = { author: "William Shakespeare", limit: 10 };
-    const result = await client.search(query);
+  test("delegates searchByAuthor to provider", async () => {
+    const result = await client.searchByAuthor("William Shakespeare", 10);
 
-    expect(provider.search).toHaveBeenCalledWith(query);
+    expect(provider.searchByAuthor).toHaveBeenCalledWith("William Shakespeare", 10);
     expect(result).toEqual(books);
   });
 
-  test("throws when no search fields are provided", () => {
-    expect(() => client.search({ limit: 10 })).toThrow(
-      "At least one search field must be provided"
-    );
+  test("throws when author is empty", () => {
+    expect(() => client.searchByAuthor("", 10)).toThrow("author must not be empty");
+  });
+
+  test("throws when author is only whitespace", () => {
+    expect(() => client.searchByAuthor("   ", 10)).toThrow("author must not be empty");
   });
 
   test("throws when limit is zero", () => {
-    expect(() => client.search({ author: "Tolkien", limit: 0 })).toThrow(
-      "limit must be a positive integer"
+    expect(() => client.searchByAuthor("Tolkien", 0)).toThrow(
+      "limit must be a positive integer",
     );
   });
 
   test("throws when limit is negative", () => {
-    expect(() => client.search({ author: "Tolkien", limit: -5 })).toThrow(
-      "limit must be a positive integer"
+    expect(() => client.searchByAuthor("Tolkien", -5)).toThrow(
+      "limit must be a positive integer",
     );
   });
 
   test("throws when limit is not an integer", () => {
-    expect(() => client.search({ author: "Tolkien", limit: 1.5 })).toThrow(
-      "limit must be a positive integer"
+    expect(() => client.searchByAuthor("Tolkien", 1.5)).toThrow(
+      "limit must be an integer",
     );
-  });
-
-  test("accepts a query with publisher only", async () => {
-    const query = { publisher: "Penguin", limit: 5 };
-    await expect(client.search(query)).resolves.toEqual(books);
-  });
-
-  test("accepts a query with yearPublished only", async () => {
-    const query = { yearPublished: 1603, limit: 5 };
-    await expect(client.search(query)).resolves.toEqual(books);
-  });
-
-  test("accepts a query with isbn only", async () => {
-    const query = { isbn: "9780141396507", limit: 5 };
-    await expect(client.search(query)).resolves.toEqual(books);
   });
 });

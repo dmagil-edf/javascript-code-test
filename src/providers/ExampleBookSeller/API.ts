@@ -1,5 +1,4 @@
 import { Book } from "../../domain/Book";
-import { BookSearchQuery } from "../../domain/BookSearchQuery";
 import { mapBooks, RawExampleBookSellerBooksSchema } from "./JsonMapper";
 import { mapBooksFromXml } from "./XmlMapper";
 import { Provider } from "../Provider";
@@ -13,8 +12,9 @@ export class ExampleBookSellerAPI implements Provider {
     private readonly format: Format = "json",
   ) {}
 
-  async search(query: BookSearchQuery): Promise<Book[]> {
-    const url = this.buildUrl(query);
+  async searchByAuthor(author: string, limit: number): Promise<Book[]> {
+    const params = new URLSearchParams({ q: author, limit: String(limit), format: this.format });
+    const url = `${this.baseUrl}/by-author?${params}`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -29,18 +29,5 @@ export class ExampleBookSellerAPI implements Provider {
     const json = await response.json();
     const parsed = RawExampleBookSellerBooksSchema.parse(json);
     return mapBooks(parsed);
-  }
-
-  private buildUrl(query: BookSearchQuery): string {
-    const params = new URLSearchParams();
-
-    if (query.author) params.set("author", query.author);
-    if (query.publisher) params.set("publisher", query.publisher);
-    if (query.yearPublished) params.set("year", String(query.yearPublished));
-    if (query.isbn) params.set("isbn", query.isbn);
-    params.set("limit", String(query.limit));
-    params.set("format", this.format);
-
-    return `${this.baseUrl}/search?${params.toString()}`;
   }
 }
