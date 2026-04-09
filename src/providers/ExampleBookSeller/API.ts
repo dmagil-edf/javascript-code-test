@@ -1,9 +1,7 @@
 import { Book } from "../../domain/Book";
 import { mapBooks, RawExampleBookSellerBooksSchema } from "./JsonMapper";
 import { mapBooksFromXml } from "./XmlMapper";
-import { Provider } from "../Provider";
-
-type Format = "json" | "xml";
+import { Format, Provider } from "../Provider";
 
 const ENDPOINTS = {
   byAuthor: "by-author",
@@ -15,7 +13,7 @@ export class ExampleBookSellerAPI implements Provider {
   constructor(
     private readonly baseUrl: string = process.env.EXAMPLE_BOOK_SELLER_BASE_URL ??
       "http://api.book-seller-example.com",
-    private readonly format: Format = "json",
+    private readonly format: Format = Format.JSON,
   ) {}
 
   searchByAuthor(author: string, limit: number): Promise<Book[]> {
@@ -39,7 +37,7 @@ export class ExampleBookSellerAPI implements Provider {
       throw new Error(`ExampleBookSellerAPI request failed with status ${response.status}`);
     }
 
-    if (this.format === "xml") {
+    if (this.format === Format.XML) {
       const xml = await response.text();
       return mapBooksFromXml(xml);
     }

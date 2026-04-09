@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { ExampleBookSellerAPI } from "./API";
 import { RawExampleBookSellerBook } from "./JsonMapper";
+import { Format } from "../Provider";
 
 const rawBooks: RawExampleBookSellerBook[] = [
   {
@@ -88,7 +89,7 @@ describe("ExampleBookSellerAPI", () => {
   });
 
   describe("XML format", () => {
-    const xmlProvider = new ExampleBookSellerAPI("http://test-api.example.com", "xml");
+    const xmlProvider = new ExampleBookSellerAPI("http://test-api.example.com", Format.XML);
     const validXml = `
       <books>
         <item>
