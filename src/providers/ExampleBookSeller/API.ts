@@ -2,6 +2,7 @@ import { Book } from "../../domain/Book";
 import { mapBooks, RawExampleBookSellerBooksSchema } from "./JsonMapper";
 import { mapBooksFromXml } from "./XmlMapper";
 import { Format, Provider } from "../Provider";
+import { requireEnv } from "../../utils/env";
 
 const ENDPOINTS = {
   byAuthor: "by-author",
@@ -11,8 +12,7 @@ const ENDPOINTS = {
 
 export class ExampleBookSellerAPI implements Provider {
   constructor(
-    private readonly baseUrl: string = process.env.EXAMPLE_BOOK_SELLER_BASE_URL ??
-      "http://api.book-seller-example.com",
+    private readonly baseUrl: string = requireEnv("EXAMPLE_BOOK_SELLER_BASE_URL"),
     private readonly format: Format = Format.JSON,
   ) {}
 
