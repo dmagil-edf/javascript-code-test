@@ -5,6 +5,7 @@ A TypeScript client for querying book seller APIs, refactored to demonstrate the
 ## Commands
 
 - `yarn test` — runs all tests with Vitest
+- `yarn start` — sets up the environment and runs the client (Only shown as an example. Will fail due to the configured API URLs not being reachable. )
 - `yarn check` — typechecks without emitting output
 - `yarn build` — compiles TypeScript into `dist/`
 
