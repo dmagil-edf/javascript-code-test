@@ -14,7 +14,6 @@ A TypeScript client for querying book seller APIs, refactored to demonstrate the
 src/
 ├── domain/
 │   ├── Book.ts                                    # Shared Book type returned by all providers
-│   └── BookSearchApiClient.ts                     # IBookSearchApiClient interface
 ├── service/
 │   └── BookSearchApiClient.ts                     # Validates input with Zod, delegates to injected Provider
 ├── providers/
