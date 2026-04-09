@@ -29,12 +29,24 @@ src/
 
 ## Configuration
 
-| Environment Variable           | Default                              | Description                       |
-| ------------------------------ | ------------------------------------ | --------------------------------- |
-| `EXAMPLE_BOOK_SELLER_BASE_URL` | `http://api.book-seller-example.com` | Base URL for ExampleBookSellerAPI |
-| `ANOTHER_BOOK_SELLER_BASE_URL` | `http://api.another-book-seller.com` | Base URL for AnotherBookSellerAPI |
+Copy `.env.example` to `.env` and fill in the values before running the app:
 
-Both can also be overridden by passing a value directly to the constructor, which is useful in tests:
+```bash
+cp .env.example .env
+```
+
+| Environment Variable           | Description                       |
+| ------------------------------ | --------------------------------- |
+| `EXAMPLE_BOOK_SELLER_BASE_URL` | Base URL for ExampleBookSellerAPI |
+| `ANOTHER_BOOK_SELLER_BASE_URL` | Base URL for AnotherBookSellerAPI |
+
+Both variables are **required**. The app will throw a clear error at startup if either is missing or empty:
+
+```
+Error: Missing required environment variable: EXAMPLE_BOOK_SELLER_BASE_URL
+```
+
+In tests, the base URL is passed directly to the constructor so no environment setup is needed:
 
 ```ts
 const provider = new ExampleBookSellerAPI("http://localhost:3000");
